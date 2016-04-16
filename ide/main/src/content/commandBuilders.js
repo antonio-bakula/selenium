@@ -114,7 +114,11 @@ CommandBuilders.add('accessor', function(window) {
 CommandBuilders.add('accessor', function(window) {
 		var result = { accessor: "value" };
 		var element = this.getRecorder(window).clickedElement;
-		if (element && element.hasAttribute && element.tagName &&
+		if (element && element.tagName.toLowerCase() == "select" && element.value) {
+		  result.target = this.getRecorder(window).clickedElementLocators;
+		  result.value = element.value;
+		}
+		else if (element && element.hasAttribute && element.tagName &&
 			('input' == element.tagName.toLowerCase() || 
 			 'textarea' == element.tagName.toLowerCase() || 
 			 (element.value && (element.value instanceof String)))) {
