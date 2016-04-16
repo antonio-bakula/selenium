@@ -114,7 +114,7 @@ CommandBuilders.add('accessor', function(window) {
 CommandBuilders.add('accessor', function(window) {
 		var result = { accessor: "value" };
 		var element = this.getRecorder(window).clickedElement;
-		if (element && element.tagName.toLowerCase() == "select" && element.value) {
+		if (element && element.tagName.toLowerCase() == "select" && !element.multiple && element.value) {
 		  result.target = this.getRecorder(window).clickedElementLocators;
 		  result.value = element.value;
 		}
@@ -140,14 +140,18 @@ CommandBuilders.add('accessor', function(window) {
 		var result = { accessor: "text" };
 		var element = this.getRecorder(window).clickedElement;
 		if (element) {
-			result.target = this.getRecorder(window).clickedElementLocators;
-			result.value = exactMatchPattern(getText(element));
+		  result.target = this.getRecorder(window).clickedElementLocators;
+		  if (element.tagName.toLowerCase() == "select" && element.selectedIndex != -1 && !element.multiple) {
+		    result.value = element[element.selectedIndex].text;
+		  }
+		  else {
+		    result.value = exactMatchPattern(getText(element));
+		  }
 		} else {
 			result.disabled = true;
 		}
 		return result;
 	});
-
 
 CommandBuilders.add('accessor', function(window) {
 		var element = this.getRecorder(window).clickedElement;
